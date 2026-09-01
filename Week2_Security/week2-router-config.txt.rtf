@@ -1,0 +1,194 @@
+{\rtf1\ansi\ansicpg1254\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\froman\fcharset0 Times-Roman;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 HQ_Router#show running-config\
+Building configuration...\
+\
+Current configuration : 3751 bytes\
+!\
+version 15.1\
+no service timestamps log datetime msec\
+no service timestamps debug datetime msec\
+service password-encryption\
+!\
+hostname HQ_Router\
+!\
+!\
+!\
+enable secret 5 $1$mERr$qvQ4xEW18PRaHS0uXVe8v.\
+!\
+!\
+ip dhcp excluded-address 192.168.10.1 192.168.10.5\
+ip dhcp excluded-address 192.168.20.1 192.168.20.5\
+ip dhcp excluded-address 192.168.30.1 192.168.30.5\
+ip dhcp excluded-address 192.168.40.1 192.168.40.5\
+ip dhcp excluded-address 192.168.99.1 192.168.99.5\
+!\
+ip dhcp pool POOL_VLAN10\
+ network 192.168.10.0 255.255.255.240\
+ default-router 192.168.10.1\
+ dns-server 192.168.50.10\
+ip dhcp pool POOL_VLAN20\
+ network 192.168.20.0 255.255.255.224\
+ default-router 192.168.20.1\
+ dns-server 192.168.50.10\
+ip dhcp pool POOL_VLAN30\
+ network 192.168.30.0 255.255.255.224\
+ default-router 192.168.30.1\
+ dns-server 192.168.50.10\
+ip dhcp pool POOL_VLAN40\
+ network 192.168.40.0 255.255.255.224\
+ default-router 192.168.40.1\
+ dns-server 192.168.50.10\
+ip dhcp pool POOL_VLAN99\
+ network 192.168.99.0 255.255.255.192\
+ default-router 192.168.99.1\
+ dns-server 192.168.50.10\
+!\
+!\
+!\
+ip cef\
+no ipv6 cef\
+!\
+!\
+!\
+username admin privilege 15 secret 5 $1$mERr$ArChCZvxIBtlSl5F6bcFD/\
+!\
+!\
+license udi pid CISCO2901/K9 sn FTX1524U7SP-\
+!\
+!\
+!\
+!\
+!\
+!\
+!\
+!\
+!\
+!\
+!\
+ip ssh version 2\
+ip domain-name techyaren.local\
+!\
+!\
+spanning-tree mode pvst\
+!\
+!\
+!\
+!\
+!\
+!\
+interface GigabitEthernet0/0\
+ no ip address\
+ duplex auto\
+ speed auto\
+!\
+interface GigabitEthernet0/0.10\
+ encapsulation dot1Q 10\
+ ip address 192.168.10.1 255.255.255.240\
+ ip nat inside\
+!\
+interface GigabitEthernet0/0.20\
+ encapsulation dot1Q 20\
+ ip address 192.168.20.1 255.255.255.224\
+ ip nat inside\
+!\
+interface GigabitEthernet0/0.30\
+ encapsulation dot1Q 30\
+ ip address 192.168.30.1 255.255.255.224\
+ ip nat inside\
+!\
+interface GigabitEthernet0/0.40\
+ encapsulation dot1Q 40\
+ ip address 192.168.40.1 255.255.255.224\
+ ip nat inside\
+!\
+interface GigabitEthernet0/0.50\
+ encapsulation dot1Q 50\
+ ip address 192.168.50.1 255.255.255.240\
+ ip nat inside\
+!\
+interface GigabitEthernet0/0.99\
+ encapsulation dot1Q 99\
+ ip address 192.168.99.1 255.255.255.192\
+ ip access-group GUEST_RESTRICTION in\
+!\
+interface GigabitEthernet0/1\
+ ip address 203.0.113.2 255.255.255.252\
+ ip nat outside\
+ duplex auto\
+ speed auto\
+!\
+interface Serial0/0/0\
+ ip address 10.0.0.1 255.255.255.252\
+ ip nat inside\
+ clock rate 2000000\
+!\
+interface Serial0/0/1\
+ no ip address\
+ clock rate 2000000\
+!\
+interface Vlan1\
+ no ip address\
+ shutdown\
+!\
+router ospf 1\
+ router-id 1.1.1.1\
+ log-adjacency-changes\
+ network 192.168.10.0 0.0.0.15 area 0\
+ network 192.168.20.0 0.0.0.31 area 0\
+ network 192.168.30.0 0.0.0.31 area 0\
+ network 192.168.40.0 0.0.0.31 area 0\
+ network 192.168.50.0 0.0.0.15 area 0\
+ network 192.168.99.0 0.0.0.63 area 0\
+ network 10.0.0.0 0.0.0.3 area 0\
+!\
+ip nat inside source list 1 interface GigabitEthernet0/1 overload\
+ip nat inside source static tcp 192.168.50.10 80 203.0.113.2 80 \
+ip classless\
+ip route 0.0.0.0 0.0.0.0 203.0.113.1 \
+!\
+ip flow-export version 9\
+!\
+!\
+ip access-list extended GUEST_RESTRICTION\
+ permit udp any eq bootpc any eq bootps\
+ deny ip 192.168.99.0 0.0.0.63 192.168.10.0 0.0.0.15\
+ deny ip 192.168.99.0 0.0.0.63 192.168.20.0 0.0.0.31\
+ deny ip 192.168.99.0 0.0.0.63 192.168.30.0 0.0.0.31\
+ deny ip 192.168.99.0 0.0.0.63 192.168.40.0 0.0.0.31\
+ deny ip 192.168.99.0 0.0.0.63 192.168.50.0 0.0.0.15\
+ permit ip 192.168.99.0 0.0.0.63 any\
+access-list 1 permit 192.168.10.0 0.0.0.15\
+access-list 1 permit 192.168.20.0 0.0.0.31\
+access-list 1 permit 192.168.30.0 0.0.0.31\
+access-list 1 permit 192.168.40.0 0.0.0.31\
+access-list 1 permit 192.168.50.0 0.0.0.15\
+access-list 1 permit 192.168.100.0 0.0.0.255\
+!\
+banner motd ^C\
+UYARI: Bu cihaza yalnizca yetkili TechYaren IT personeli erisebilir!\
+^C\
+!\
+!\
+!\
+!\
+line con 0\
+!\
+line aux 0\
+!\
+line vty 0 4\
+ login local\
+ transport input ssh\
+!\
+!\
+!\
+end\
+\
+}
